@@ -1,7 +1,8 @@
 # Sudoku-Solver
 Program in Python to solve sudoku puzzles from images, using TensorFlow (Keras) and Backtracking Algorithms.
 
-Aclaraciones: \n
+Aclaraciones:
+
 En varios casos el modelo de lectura de numeros falla al reconocer correctamente
  y se suele confundir por ejemplo al 7 por un 1 o al 8 por un 0.
 
