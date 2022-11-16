@@ -5,7 +5,6 @@ Aclaraciones:
 
 En varios casos el modelo de lectura de numeros falla al reconocer correctamente
  y se suele confundir por ejemplo al 7 por un 1 o al 8 por un 0.
-
 Esto provoca que el sudoku no pueda ser resuelto de manera correcta. Aunque
  hay casos donde aun asi (habiendolo leido mal) el programa logra encontrar una
  solucion
