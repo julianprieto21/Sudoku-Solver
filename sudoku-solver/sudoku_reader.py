@@ -4,35 +4,33 @@ import tensorflow as tf
 import imutils as im
 
 
-def _get_perspective(img, location, height = 900, width = 900):
+def _get_perspective(img, location, height=900, width=900):
     """
     Acomoda tablero
     """
-    # Toma una imagen y la locacion que interesa. Devuelve la region seleccionada
+    # Toma una imagen y la locación que interesa. Devuelve la region seleccionada
     pts1 = np.float32([location[0], location[3], location[1], location[2]])
-    pts2 = np.float32([[0,0], [width,0], [0, height], [width, height]])
+    pts2 = np.float32([[0, 0], [width, 0], [0, height], [width, height]])
 
-    # Aplica algoritmo de transformacion de perspectiva
+    # Aplica algoritmo de transformación de perspectiva
     matrix = cv2.getPerspectiveTransform(pts1, pts2)
     result = cv2.warpPerspective(img, matrix, (width, height))
     return result
+
 
 def _find_board(img):
     """
     Encuentra el tablero en una imagen
     """
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    bfilter = cv2.bilateralFilter(gray, 13,20,20)
+    bfilter = cv2.bilateralFilter(gray, 13, 20, 20)
     edged = cv2.Canny(bfilter, 30, 180)
-    keypoints = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    contours = im.grab_contours(keypoints)
-    newimg = cv2.drawContours(img.copy(), contours, -1, (0,255,0), 3)
-    # cv2.imshow("img", newimg)
-    # cv2.waitKey(0)
+    key_points = cv2.findContours(edged.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = im.grab_contours(key_points)
 
-    contours = sorted(contours, key=cv2.contourArea, reverse=True) [:15]
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)[:15]
     location = None
-    # Encontrar contorno del rectangulo
+    # Encontrar contorno del rectángulo
     for contour in contours:
         approx = cv2.approxPolyDP(contour, 15, True)
         if len(approx) == 4:
@@ -40,6 +38,7 @@ def _find_board(img):
             break
     result = _get_perspective(img, location)
     return result
+
 
 def _split_boxes(board, show_boxes):
     """
@@ -58,9 +57,10 @@ def _split_boxes(board, show_boxes):
             boxes.append(box)
     return boxes
 
+
 def predict(board, find_board=False, show_boxes=False, show_board=False):
     """
-    Utiliza cada casillero y predice que numero es
+    Utiliza cada casillero y predice que número es
     """
     input_size = 28
     model = tf.keras.models.load_model("modelo.h5")
@@ -89,5 +89,5 @@ def predict(board, find_board=False, show_boxes=False, show_board=False):
             predicted_number = 0
         predicted_numbers.append(predicted_number)
     # Reshape la lista
-    board_num = np.array(predicted_numbers).astype("uint8").reshape(9,9)
+    board_num = np.array(predicted_numbers).astype("uint8").reshape(9, 9)
     return board_num, predictions
