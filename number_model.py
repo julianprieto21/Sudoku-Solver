@@ -70,6 +70,9 @@ class NumberModel:
 
     def _save_model(self):
         self.model.save("number_model.h5")
+        model_json = self.model.to_json()
+        with open("number_model.json", "w") as json_file:
+            json_file.write(model_json)
 
     def _load_model(self):
         self.model = tf.keras.models.load_model("number_model.h5")
@@ -93,3 +96,7 @@ class NumberModel:
         self._init_model()
         self._train_model()
         self._save_model()
+
+# model = NumberModel("data/dt.csv")
+# model._load_model()
+# model._save_model()

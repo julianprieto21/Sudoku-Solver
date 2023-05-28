@@ -12,7 +12,7 @@ class ImageReader:
     """
     def __init__(self, image_path):
         self.image_path = image_path
-        self.image = None
+        self.image = None   
         self.modified_image = None
         self.numbers = []
         self.prediction = None
